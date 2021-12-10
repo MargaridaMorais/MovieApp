@@ -18,7 +18,7 @@ class Movie {
   String? backdropPath;
   String? overview;
   String? releaseDate;
-  int? movieId;
+  int movieId;
   int? voteCount;
   num? rate;
 

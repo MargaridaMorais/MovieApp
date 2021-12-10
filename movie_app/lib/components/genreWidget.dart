@@ -1,15 +1,17 @@
 // ignore_for_file: file_names
 
 import 'package:flutter/material.dart';
+import 'package:flutter/painting.dart';
+import 'package:flutter/rendering.dart';
 import 'package:movie_app/models/movie.dart';
 import 'package:movie_app/services/tmdbAPI.dart';
 import 'package:movie_app/models/genre.dart';
+import 'package:movie_app/components/moviePreviewModal.dart';
 
 class GenreWidget extends StatefulWidget {
-  // const GenreWidget({Key? key}) : super(key: key);
-
   final Genre genre;
-  const GenreWidget(this.genre);
+  // const GenreWidget(this.genre);
+  const GenreWidget({Key? key, required this.genre}) : super(key: key);
 
   @override
   _GenreWidgetState createState() => _GenreWidgetState();
@@ -17,9 +19,10 @@ class GenreWidget extends StatefulWidget {
 
 class _GenreWidgetState extends State<GenreWidget> {
   final ScrollController _controller = ScrollController();
-  List<Movie> _movies = [];
-  int _currentPage = 1;
-  bool loading = false, allLoaded = false;
+  final List<Movie> _movies = []; // current movie list to be displayed
+  int _currentPage = 1; // last page to be loaded in the results
+  bool loading = false; // loading means it's currently loading movies
+  bool allLoaded = false; // allLoaded means all movies available in the results query have been loaded, there are no more movies
 
   @override
   void initState() {
@@ -28,6 +31,7 @@ class _GenreWidgetState extends State<GenreWidget> {
     _fetchMovies();
 
     _controller.addListener(() {
+      // The listener function will fetch more movies to show whenever the user reaches the end of the list and no movies are being loaded already
       if (_controller.position.pixels >= _controller.position.maxScrollExtent && !loading) {
         _fetchMovies();
       }
@@ -40,8 +44,10 @@ class _GenreWidgetState extends State<GenreWidget> {
     _controller.dispose();
   }
 
+  // Fetch the movies related to the specific genre
   void _fetchMovies() async {
     if (allLoaded) {
+      // if no more movies then return nothing
       return ;
     }
 
@@ -51,8 +57,9 @@ class _GenreWidgetState extends State<GenreWidget> {
 
     fetchMoviesPerGenre(widget.genre.id, _currentPage).then((res) {
       setState(() {
-        _movies.addAll(res[1]);
+        _movies.addAll(res[1]); // add all new fetched movies to the movie list to be shown
         if (res[0] == _currentPage) {
+          // if the page being currently loaded corresponds to the max number of result pages than all results have been loaded
           allLoaded = true;
         }
         _currentPage++;
@@ -64,54 +71,10 @@ class _GenreWidgetState extends State<GenreWidget> {
     });
   }
 
-  Future movieModal(Movie movie) {
-    // Here we can add a condition if there is a video/trailer available, show that, else show the backdrop for the movie
-
-    var url = movie.backdropPath ??= ""; // assign empty string in case of null
-    var finalUrl = url.isEmpty ? "https://bit.ly/3cuC5nS" : "https://image.tmdb.org/t/p/w780/" + url;
-
-    return showModalBottomSheet(
-      isScrollControlled: true,
-      backgroundColor: Colors.black,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.only(topLeft: Radius.circular(20.0), topRight: Radius.circular(20.0)),
-      ),
-      builder: (BuildContext context) {
-        return Column(
-          children: [
-            ShaderMask(
-              shaderCallback: (rect) {
-                return const LinearGradient(
-                  begin: Alignment.center,
-                  end: Alignment.bottomCenter,
-                  colors: [Colors.black, Colors.transparent],
-                ).createShader(Rect.fromLTRB(0, 0, rect.width, rect.height));
-              },
-              blendMode: BlendMode.dstIn,
-              child: ClipRRect(
-                borderRadius: BorderRadius.only(topRight: Radius.circular(20.0), topLeft: Radius.circular(20.0)),
-                child: Image.network(finalUrl),
-              ),
-            ),
-            Text(movie.title ??= "No title"),
-            // Text(movie.rate),
-            Text(movie.releaseDate ??= "No date"),
-            Text(movie.overview ??= "No overview", softWrap: true,),
-            ElevatedButton(
-              child: const Text('Close BottomSheet'),
-              onPressed: () => Navigator.pop(context),
-            ),
-          ],
-        );
-      },
-      context: context,
-    );
-  }
-
+  // Small rectangle with image preview of the movie
   Widget moviePreview(Movie movie) { // this has to receive a movie object
     var url = movie.posterPath ??= ""; // assign empty string in case of null
-
-    var finalUrl = url.isEmpty ? "https://bit.ly/3cuC5nS" : "https://image.tmdb.org/t/p/w500/" + url;
+    var finalUrl = url.isEmpty ? "https://bit.ly/3cuC5nS" : "https://image.tmdb.org/t/p/w500/" + url; // if string is empty show default image
 
     return GestureDetector(
       child: ClipRRect(
@@ -123,10 +86,11 @@ class _GenreWidgetState extends State<GenreWidget> {
           fit: BoxFit.fitHeight,
         ),
       ),
-      onTap: () => { movieModal(movie) },
+      onTap: () => { movieModal(context, movie) },
     );
   }
 
+  // TODO change the movie scroll into reusable code to be used in the related movies scroll
   Widget movieScroll() {
     return Scrollbar(
         child: ListView.separated(
@@ -153,7 +117,7 @@ class _GenreWidgetState extends State<GenreWidget> {
       children: [
         Align(
           alignment: Alignment.centerLeft,
-          child: Text(widget.genre.name, style: const TextStyle(fontSize: 30.0))
+          child: Text(widget.genre.name, style: const TextStyle(fontFamily: "Graph", fontSize: 30.0))
         ),
         const SizedBox(height: 10.0), // Sized box to separate text and listview
         SizedBox(

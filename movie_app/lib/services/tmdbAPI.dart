@@ -9,6 +9,26 @@ import 'package:movie_app/models/genre.dart';
 
 const _apiKey = "af6d7f4ac657b5f325d788bcb28209bd"; // key for the API calls, for now it's here just for testing
 
+Future<String> fetchMovieVideo(int movieId) async {
+  final response = await http
+      .get(Uri.parse('https://api.themoviedb.org/3/movie/' + movieId.toString() + '/videos?api_key='
+      + _apiKey + '&language=en-US'));
+
+  if (response.statusCode == 200) {
+    var decoded = jsonDecode(response.body);
+    print(decoded);
+    for (var video in decoded['results']) {
+      print(video);
+      if (video['type'] == "Trailer" && video['official'] == true && video['site'] == "YouTube") {
+        return video['key'];
+      }
+    }
+    throw Exception('Failed to get results');
+  } else {
+    throw Exception('Failed to get results');
+  }
+}
+
 Future<List> fetchMoviesPerGenre(int genreId, int pages) async {
   final response = await http
       .get(Uri.parse('https://api.themoviedb.org/3/discover/movie?api_key=' + _apiKey + '&language=en-US&page='
@@ -40,6 +60,7 @@ Future<List<Genre>> fetchGenres() async {
   }
 }
 
+/*
 Future<Movie> fetchMovie() async {
   final response = await http
       .get(Uri.parse('https://api.themoviedb.org/3/movie/703771?api_key=af6d7f4ac657b5f325d788bcb28209bd&language=en-US'));
@@ -53,4 +74,4 @@ Future<Movie> fetchMovie() async {
     // then throw an exception.
     throw Exception('Failed to load movie');
   }
-}
+}*/
