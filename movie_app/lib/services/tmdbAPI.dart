@@ -9,6 +9,22 @@ import 'package:movie_app/models/genre.dart';
 
 const _apiKey = "af6d7f4ac657b5f325d788bcb28209bd"; // key for the API calls, for now it's here just for testing
 
+Future<List> fetchSimilarMovies(int movieId) async {
+  final response = await http
+      .get(Uri.parse('https://api.themoviedb.org/3/movie/' + movieId.toString() + '/similar?api_key='
+      + _apiKey + '&language=en-US'));
+
+  int qtMovies = 6; // number of movies to return
+  if (response.statusCode == 200) {
+    var decoded = jsonDecode(response.body);
+    Iterable res = decoded['results'].take(qtMovies); // Get first qtMovies number of movies from the list
+    List<Movie> movies = List<Movie>.from(res.map((movie) => Movie.fromJson(movie)));
+    return movies;
+  } else {
+    throw Exception('Failed to get results');
+  }
+}
+
 Future<String> fetchMovieVideo(int movieId) async {
   final response = await http
       .get(Uri.parse('https://api.themoviedb.org/3/movie/' + movieId.toString() + '/videos?api_key='
@@ -16,9 +32,7 @@ Future<String> fetchMovieVideo(int movieId) async {
 
   if (response.statusCode == 200) {
     var decoded = jsonDecode(response.body);
-    print(decoded);
     for (var video in decoded['results']) {
-      print(video);
       if (video['type'] == "Trailer" && video['official'] == true && video['site'] == "YouTube") {
         return video['key'];
       }

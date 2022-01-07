@@ -13,30 +13,31 @@ class HomeScreen extends StatefulWidget {
   _HomeScreenState createState() => _HomeScreenState();
 }
 
-// TODO add padding to the scrollbars
 class _HomeScreenState extends State<HomeScreen> {
   final Future<List<Genre>> _fetchedGenres = fetchGenres();
 
   Widget genreScroll(List<Genre> genres) {
     return Scrollbar(
-      child: ListView.separated(
-        shrinkWrap: true,
-        // padding: const EdgeInsets.all(10.0),
-        itemCount: genres.length,
-        scrollDirection: Axis.vertical,
-        separatorBuilder: (BuildContext context, int index) {
-          return const Divider(
-            height: 30.0,
-            thickness: 3.0,
-          );
-        },
-        itemBuilder: (context, index) {
-          return GenreWidget(genre: genres[index]);
-        },
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+        child: ListView.separated(
+          shrinkWrap: true,
+          itemCount: genres.length,
+          scrollDirection: Axis.vertical,
+          separatorBuilder: (BuildContext context, int index) {
+            // Divider line that divides each genre
+            return const Divider(
+              height: 30.0,
+              thickness: 3.0,
+            );
+          },
+          itemBuilder: (context, index) {
+            return GenreWidget(genre: genres[index]);
+          },
+        ),
       ));
   }
 
-  //  Build the top bar with the movie app logo and the genres scroll
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -82,6 +83,7 @@ class _HomeScreenState extends State<HomeScreen> {
         )
       ),
       theme: ThemeData(
+        // backgroundColor: Colors.black,
         brightness: Brightness.dark,
       ),
     );
