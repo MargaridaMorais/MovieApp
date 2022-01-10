@@ -20,7 +20,7 @@ class _movieSimilarsWidgetState extends State<movieSimilarsWidget> {
 
   Widget buildSimilarMoviesPreview(BuildContext context, List<Movie> movies) {
     return SizedBox(
-      height: 200,
+      height: MediaQuery.of(context).size.height / 4,
       child: movieScroll(context, _controller, movies),
     );
   }
@@ -35,9 +35,17 @@ class _movieSimilarsWidgetState extends State<movieSimilarsWidget> {
         if (snapshot.hasData) {
           return buildSimilarMoviesPreview(context, snapshot.data);
         } else if (snapshot.hasError) {
-          return Text("Not possible to load"); // TODO: add loading circle in here
+          return const Center(
+            child: Icon(Icons.error_outline, color: Colors.red, size: 60),
+          );
         } else {
-          return Text("Not possible to load");
+          return const Center(
+            child: SizedBox(
+              child: CircularProgressIndicator(),
+              width: 60,
+              height: 60,
+            ),
+          );
         }
       }
     );

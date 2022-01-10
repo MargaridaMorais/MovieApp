@@ -7,8 +7,6 @@ import 'package:movie_app/services/tmdbAPI.dart';
 import 'package:movie_app/components/videoPlayerWidget.dart';
 import 'package:movie_app/components/movieSimilarsWidget.dart';
 
-// TODO: this has to be changed to a real screen and not a modal
-
 Future moviePreviewModalWidget(BuildContext context, Movie movie) {
   var urlBackdrop = movie.backdropPath ??= ""; // assign empty string in case of null
   urlBackdrop = urlBackdrop.isEmpty ? "https://bit.ly/3cuC5nS" : "https://image.tmdb.org/t/p/w1280/" + urlBackdrop;
@@ -84,7 +82,7 @@ Future moviePreviewModalWidget(BuildContext context, Movie movie) {
                 ],
               ),
           ),
-          const SizedBox(height: 10.0,),
+          const SizedBox(height: 5.0,),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10.0),
             child:
@@ -103,7 +101,7 @@ Future moviePreviewModalWidget(BuildContext context, Movie movie) {
           ),
           const SizedBox(height: 10.0,),
           Expanded(
-            flex: 1,
+            // flex: 1,
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10.0),
               child:
@@ -118,6 +116,14 @@ Future moviePreviewModalWidget(BuildContext context, Movie movie) {
             )
           ),
           const SizedBox(height: 10.0,),
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 10.0),
+            child:
+            Text(
+              "Similar Titles",
+                style: TextStyle(fontFamily: "Graph", fontSize: 25.0, fontWeight: FontWeight.bold),
+            ),
+          ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10.0),
             child: movieSimilarsWidget(movieId: movie.movieId),

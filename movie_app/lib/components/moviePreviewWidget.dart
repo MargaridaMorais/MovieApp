@@ -15,8 +15,8 @@ Widget moviePreview(BuildContext context, Movie movie) { // this has to receive 
       borderRadius: BorderRadius.circular(15.0),
       child: Image.network(
         finalUrl,
-        width: 120.0,
-        height: 200.0,
+        /*width: 120.0,
+        height: 200.0,*/
         fit: BoxFit.fitHeight,
       ),
     ),

@@ -27,7 +27,7 @@ class _HomeScreenState extends State<HomeScreen> {
           separatorBuilder: (BuildContext context, int index) {
             // Divider line that divides each genre
             return const Divider(
-              height: 30.0,
+              height: 20.0,
               thickness: 3.0,
             );
           },
@@ -44,11 +44,11 @@ class _HomeScreenState extends State<HomeScreen> {
       title: 'Movie App',
       home: Scaffold(
         body: Padding(
-          padding: const EdgeInsets.fromLTRB(10, 35, 10, 10),
+          padding: const EdgeInsets.fromLTRB(10, 35, 10, 5),
           child: Column(
             children: [
               SizedBox(
-                height: 50,
+                height: MediaQuery.of(context).size.height / 10,
                 child: Align(
                   child: Image.asset("assets/images/logo.png", height: 30,),
                   alignment: Alignment.centerLeft,

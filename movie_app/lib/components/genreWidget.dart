@@ -84,7 +84,7 @@ class _GenreWidgetState extends State<GenreWidget> {
         ),
         const SizedBox(height: 10.0), // Sized box to separate text and listview
         SizedBox(
-          height: 200.0,
+          height: MediaQuery.of(context).size.height / 4,
           child: movieScroll(context, _controller, _movies),
         ),
       ],
