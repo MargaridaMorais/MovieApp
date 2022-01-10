@@ -34,4 +34,6 @@ Trailer          |  No Trailer
 
 ## Demo
 
-See app video demo in [here](https://github.com/MargaridaMorais/MovieApp/blob/develop/Assets/video_demo.mp4).
+https://user-images.githubusercontent.com/32324271/148804354-c98e55fb-5f8f-42d5-9384-596fb49596a5.mp4
+
+
