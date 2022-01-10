@@ -34,6 +34,7 @@ Trailer          |  No Trailer
 
 ## Demo
 
+![](./Assets/video_demo.mp4)
 <video width="320" height="500" controls>
   <source src="./Assets/video_demo.mp4" type="video/mp4">
 </video>
